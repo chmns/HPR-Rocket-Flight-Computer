@@ -413,12 +413,12 @@ void beginRadio(){
     case 0:
       break;
 
-    case 1:
+    case 1: // Semtech LoRa radio: 
       sensors.statusRadio = beginSX127X(pins.radioRST);
       break;
 
-    case 2:
-      sensors.statusRadio = beginExternalRadio();
+    case 2: // RFD900 UART-based radio: 
+      sensors.statusRadio = beginRFD900(pins.radioRTS, pins.radioCTS);
       break;
 
     default:

@@ -181,6 +181,8 @@ struct{
     int Kp = 241;//4
     int Ki = 245;//4
     int Kd = 249;//4
+    int radioRTSPin = 250;//139: radio Ready To Send pin (for RFD900)
+    int radioCTSPin = 251;//140: radio Clear To Send pin (for RFD900)
 } eeprom;
 //-----------------------------------------
 //Sensor device data
@@ -419,8 +421,10 @@ struct{
   uint8_t pyro4Fire;
   uint8_t radioCS;
   uint8_t radioIRQ;
-  uint8_t radioRST;
+  uint8_t radioRST; // reset
   uint8_t radioEN;
+  uint8_t radioRTS; // ready to send (for RFD900)
+  uint8_t radioCTS; // clear to send (for RFD900)
   uint8_t servo1;
   uint8_t servo2;
   uint8_t servo3;
