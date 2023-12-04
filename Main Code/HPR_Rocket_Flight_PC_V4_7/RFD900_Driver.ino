@@ -10,7 +10,7 @@
 //sendPktRFD900(): sends the packet
 
 // temporaire pour l'instant:
-#define radio Serial2 
+#define radioPort Serial2 
 #define RADIO_UART_SPEED 57600
 #define RADIO_TX_BUFFER_BYTES 1024
 
@@ -25,12 +25,12 @@ bool beginRFD900(uint8_t radioRTS, uint8_t radioCTS) {
 
   boolean successFlag = true;
 
-  radio.begin(RADIO_UART_SPEED);
-  radio.attachRts(radioRTS);
-  radio.attachCts(radioCTS);
+  radioPort.begin(RADIO_UART_SPEED);
+  radioPort.attachRts(radioRTS);
+  radioPort.attachCts(radioCTS);
 
   uint8_t txBuffer[RADIO_TX_BUFFER_BYTES];
-  radio.addMemoryForWrite(txBuffer, RADIO_TX_BUFFER_BYTES);
+  radioPort.addMemoryForWrite(txBuffer, RADIO_TX_BUFFER_BYTES);
 
   if(successFlag) {
     Serial.println("RFD900 Radio OK!");
@@ -43,7 +43,7 @@ bool beginRFD900(uint8_t radioRTS, uint8_t radioCTS) {
 bool sendPktRFD900(uint8_t* data, uint8_t len) {
   
   for(int i = 0; i < len; i++) {
-    radio.write(data[i]);
+    radioPort.write(data[i]);
   }
   
   return true;
