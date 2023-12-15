@@ -160,6 +160,8 @@ _bus radioBus;
 _bus sdBus;
 _bus *activeBus;
 
+//typedef void (*getAccel)
+
 //any routines called in the main flight loop need to be as fast as possible, so set them as "always inline" for the compiler
 inline void checkEvents(void) __attribute__((always_inline));
 inline void getDCM2DRotn(void) __attribute__((always_inline));
@@ -289,6 +291,9 @@ void setup(void) {
   pinMode(pins.testGnd, OUTPUT); 
   pinMode(pins.radioCS, OUTPUT);       
   pinMode(pins.highG_CS, OUTPUT);
+  //Set the CS pins to HIGH
+  digitalWrite(pins.radioCS, HIGH);
+  digitalWrite(pins.highG_CS, HIGH);
   //Set the pyro firing pins to LOW for safety
   digitalWrite(pins.pyro1Fire, LOW);
   digitalWrite(pins.pyro2Fire, LOW);
@@ -297,8 +302,13 @@ void setup(void) {
   
   //Start Harware Serial communication
   setHWSERIAL();
-  if(sensors.GNSS == 3){HWSERIAL->begin(38400);Serial.println("Starting HWSerial at 38400 baud");}
-  else{HWSERIAL->begin(9600);Serial.println("Starting HWSerial at 9600 baud");}
+  if(sensors.GNSS == 3){
+    HWSERIAL->begin(38400);
+    Serial.println("Starting HWSerial at 38400 baud");}
+  else{
+    HWSERIAL->begin(9600);
+    Serial.println("Starting HWSerial at 9600 baud");}
+  restoreGPSdefaults();
   
   //check if the test mode button is being held
   digitalWrite(pins.testGnd, LOW);
@@ -319,7 +329,7 @@ void setup(void) {
   #elif defined (__IMXRT1062__)
     //12 bit resolution for Teensy 4.0 & 4.1
     analogReadResolution(12);
-    adcConvert = 0.000244140625;
+    adcConvert = 0.000244140625;//=1/4096
     ADCmidValue = 2048;
   #endif
 
@@ -681,6 +691,7 @@ void setup(void) {
     maxVelocity = 202/unitConvert;
     pktInterval.postFlight = 1000000UL;
     thresholdVel = 15.5F;
+    clearRailTime = 0UL;
     settings.magSwitchEnable = false;}
 
   //Create and open the next file on the SD card
@@ -853,7 +864,7 @@ void setup(void) {
     if(settings.testMode){Serial.print(F("New Bias: "));Serial.println(highG.biasY);}}
   if(highG.orientZ == 'Z'){
     if(settings.testMode){Serial.print("Old Bias: ");Serial.println(highG.biasZ);}
-    highG.biasZ -= highG.dirZ*((int)(highG.z0 - (float)accel.z0 / (float)A2D));
+    highG.biasZ -= highG.dirZ*(highG.z0 - (int)((float)accel.z0 / (float)A2D));
     if(settings.testMode){Serial.print(F("New Bias: "));Serial.println(highG.biasZ);}}
   //highG.biasX = highGx0 - (int)((float)accel.x0 / (float)A2D) - 27;//old formula is kept for reference
   

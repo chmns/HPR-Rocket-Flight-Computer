@@ -526,6 +526,8 @@ int highGfilter[30] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 uint8_t sizeHighGfilter = 30;
 uint8_t filterPosn = 0;
 float highGsmooth;
+float adcConvert = 0.000015259;
+uint16_t ADCmidValue = 32768;
 union {
    int16_t calValue; 
    uint8_t calByte[2];
@@ -597,6 +599,7 @@ float maxVelocity = 0.0F;
 float fusionVel = 0.0F;
 float fusionAlt = 0.0F;
 float thresholdVel = 44.3F;
+uint32_t clearRailTime = 250000UL;
 //-----------------------------------------
 //beeper variables
 //-----------------------------------------
@@ -644,8 +647,6 @@ uint16_t voltReading;
 unsigned long lastVolt = 0UL;
 bool reportCode = true;//true = report max altitude, false = report max velocity
 uint8_t postFlightCode = 0;
-float adcConvert = 0.000015259;
-uint16_t ADCmidValue = 32768;
 const char cs = ',';
 //-----------------------------------------
 //GNSS Variables
